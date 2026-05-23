@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.io.IOException;
@@ -18,6 +20,11 @@ import java.io.IOException;
 @Configuration //告诉 Spring：这是一个配置类，项目启动时会自动加载
 @EnableWebSecurity //启用 Spring Security 的 Web 安全功能
 public class SecurityConfiguration {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();  // 告诉 Spring Security：用 BCrypt 加密/比对
+    }
 
     @Bean
     //安全过滤器链，所有请求都会经过这个链上的过滤器
@@ -45,6 +52,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
+
 
     /**
      * 登录成功：返回 JSON
