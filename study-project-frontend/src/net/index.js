@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
 
-const defaultError = () => ElMessage.error('发生了一些错误，请重新再试')
+const defaultError = () => ElMessage.error('出现了点小问题，请稍后再试')
 const defaultFailure = (message) => ElMessage.error(message)
 
 function post(url, data, success, failure = defaultFailure, error = defaultError) {
