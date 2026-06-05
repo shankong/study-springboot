@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -45,6 +46,15 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 //过滤，只有登陆后才能访问
                 .authorizeHttpRequests(auth -> auth
+                        // 以下接口不用登录就能访问（注册、忘记密码）
+                        // 明确指定 POST（业务请求）和 OPTIONS（CORS 预检）
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/auth/forgot-password",
+                                "/api/auth/reset-password",
+                                "/api/auth/user-register",
+                                "/api/auth/commit-register").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        // 其他所有请求都要登录
                         .anyRequest().authenticated()
                 )
                 //表单登陆
@@ -74,14 +84,14 @@ public class SecurityConfiguration {
     }
 
     /**
-     * 跨域配置 — 允许前端 localhost:5174 访问后端
+     * 跨域配置 — 允许前端 localhost:5173 访问后端
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("http://localhost:5173/"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedHeaders(List.of("*")); //允许所有请求头
         config.setAllowCredentials(true); //允许携带 Cookie，保持登录状态
         config.setMaxAge(3600L); //预检请求结果缓存 1 小时
 
@@ -91,10 +101,13 @@ public class SecurityConfiguration {
         return source;
     }
 
+    /**
+     * 登录成功、退出登录、登录失败、未登录处理
+     */
     private void onLoginSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
                                 Authentication authentication) throws IOException {
-        response.setContentType("application/json");
+        response.setContentType("application/json"); //告诉前端返回 JSON 数据
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(JSONObject.toJSONString(RestBean.success("登录成功")));
     }
@@ -124,6 +137,10 @@ public class SecurityConfiguration {
         response.getWriter().write(JSONObject.toJSONString(RestBean.failure(401, "未登录")));
     }
 
+    /**
+     * 记住我功能实现
+     * 把持久化的token存入数据库的表结构
+     */
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();

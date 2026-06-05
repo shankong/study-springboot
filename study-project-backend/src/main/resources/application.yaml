@@ -4,3 +4,14 @@ spring:
     url: jdbc:mysql://localhost:3306/study_project?useUnicode=true&characterEncoding=utf-8
     username: root
     password: 123456
+  mail:
+    host: smtp.qq.com           # QQ邮箱的SMTP服务器
+    port: 587                    # 端口
+    username: 2197902558@qq.com   # 发件邮箱
+    password: wncjkjcdceyldhic          # 不是QQ密码！是邮箱设置里生成的授权码
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

@@ -70,7 +70,7 @@
 
       <div class="extra-row">
         <el-checkbox v-model="form.remember" label="记住我" />
-        <el-link :underline="false">忘记密码？</el-link>
+        <el-link :underline="false" @click="router.push('/forgot-password')">忘记密码？</el-link>
       </div>
 
       <el-button
@@ -92,6 +92,7 @@
         size="large"
         round
         plain
+        @click="router.push('/register')"
       >
         注册账号
       </el-button>
