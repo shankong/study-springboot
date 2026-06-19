@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="D:/WorkSoftware/apache-maven-3.9.4/mvn_repo/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="D:/WorkSoftware/apache-maven-3.9.4/mvn_repo/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="study-project-backend" />
       </profile>

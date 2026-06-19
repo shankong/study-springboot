@@ -15,3 +15,16 @@ spring:
           auth: true
           starttls:
             enable: true
+
+# MyBatis SQL 日志 — 会在控制台打印 SQL 语句和参数
+logging:
+  level:
+    com.shankong.mapper: DEBUG
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:com/shankong/mapper/*.xml  # 扫描 XML 映射文件
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID  # 雪花算法自动生成 Long 型 ID
+

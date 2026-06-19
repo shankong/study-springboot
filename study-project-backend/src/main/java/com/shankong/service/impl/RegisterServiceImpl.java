@@ -1,5 +1,6 @@
 package com.shankong.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.shankong.mapper.UserMapper;
 import com.shankong.pojo.Register;
 import com.shankong.service.RegisterService;
@@ -23,6 +24,9 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Integer insertRegister(Register register) {
+        // 雪花算法生成全局唯一 ID
+        register.setId(IdWorker.getId());
+        // 密码 BCrypt 加密
         register.setPassword(passwordEncoder.encode(register.getPassword()));
         return userMapper.insert(register);
     }

@@ -20,9 +20,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if(usernameOrEmail == null) throw new UsernameNotFoundException("用户名或邮箱不能为空");
         Account byUsernameOrEmail = userMapper.findByUsernameOrEmail(usernameOrEmail);
         if(byUsernameOrEmail == null) throw new UsernameNotFoundException("用户名或密码错误");
+        if(byUsernameOrEmail.getAccountState() != 1) throw new UsernameNotFoundException("用户出错");
         return User
-                .withUsername(byUsernameOrEmail.getUsername()) // ① 静态方法，创建一个建造器，填入用户名
-                .password(byUsernameOrEmail.getPassword()) // ② 填入密码（必须是hash加密后的）
+                .withUsername(byUsernameOrEmail.getAccountUsername()) // ① 静态方法，创建一个建造器，填入用户名
+                .password(byUsernameOrEmail.getAccountPassword()) // ② 填入密码（必须是hash加密后的）
                 .roles("user")
                 .build();
     }
